@@ -7,9 +7,11 @@
 - 決定事項ログ: [`docs/01_DECISIONS.md`](docs/01_DECISIONS.md)
 - 制約条件の分析（日本在住・小資金・LINE 通知）: [`docs/02_CONSTRAINTS.md`](docs/02_CONSTRAINTS.md)
 - バックテスター詳細仕様: [`docs/03_BACKTESTER.md`](docs/03_BACKTESTER.md)
+- データノート（品質所見の記録）: [`docs/04_DATA_NOTES.md`](docs/04_DATA_NOTES.md)
 
 ## 現在のフェーズ
-**1. 基盤**（進行中）。完了条件: 2020 年〜現在の主要銘柄データがローカルにあり品質レポートが出る。
+**1. 基盤** 完了（BTC/ETH/SOL/HYPE の 2020 年〜2026-08 の 1 分足と資金調達率を取得、品質レポート済み）。
+**2. バックテスター** 進行中（Bar モードのエンジン第 1 版まで実装。次は検証プロトコル WFO/CPCV とレポート）。
 
 実装済み:
 - `core/`: 時刻規約（UTC 強制、`as_of` 境界）、取引所非依存の基本型、OMS 状態、取引所仕様による丸め
@@ -21,7 +23,10 @@
 - `notify/`: LINE Messaging API push（月間予算・再試行）、重大度別アラートルーティング（重複抑止・バッチ・予算温存）
 - `exchanges/hyperliquid.py`: 第 1 系統。仕様（数量刻み・価格刻み・最小注文）取得、ユニバース選定、直近の足と資金調達率
 
-未実装（次）: バックテスター（`docs/03_BACKTESTER.md`）、特徴量、リアルタイム市場データ、発注
+- `backtest/`: 口座モデル、Bar モード約定判定、執行アルゴ、イベント駆動エンジン、指標
+- `strategies/base.py`, `risk/ladder.py`: 戦略インターフェース、DD ラダー（研究・本番共通）
+
+未実装（次）: 検証プロトコル（WFO/CPCV/デフレートシャープ）、特徴量、戦略研究、リアルタイム市場データ、発注
 
 ## セットアップ
 ```bash

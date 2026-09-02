@@ -19,9 +19,9 @@ def test_missing_and_jump_detected():
         .alias("close")
     )
     rep = check_klines(k, "1m", max_missing_ratio=0.0)
-    names = {c.name: c.ok for c in rep.checks}
-    assert not names["missing_bars"]
-    assert not names["price_jumps"]
+    names = {c.name: c for c in rep.checks}
+    assert not names["missing_bars"].ok
+    assert names["price_jumps"].warn and names["price_jumps"].ok  # 警告扱い
 
 
 def test_agg_trades_gap():
@@ -45,3 +45,7 @@ def test_funding_extreme():
     df = pl.DataFrame({"ts_ms": [1, 2], "interval_hours": [8, 8], "rate": [0.0001, 0.05]})
     rep = check_funding(df)
     assert any(c.name == "rate_range" and not c.ok for c in rep.checks)
+    df = pl.DataFrame({"ts_ms": [1, 2], "interval_hours": [8, 2], "rate": [0.0001, 0.02]})
+    rep = check_funding(df)
+    assert rep.ok  # 上限 2% と 2 時間間隔は正常
+    assert any(c.name == "rate_extreme" and c.warn for c in rep.checks)
