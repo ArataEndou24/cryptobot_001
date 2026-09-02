@@ -5,8 +5,8 @@
 
 | ID | 論点 | 推奨案 | 選択肢 | 状態 | 決定内容 |
 |---|---|---|---|---|---|
-| D-01 | 取引所・アカウント種別 | 海外大手取引所の USDT 建て無期限先物（第2取引所として現物も） | (a) Binance (b) Bybit (c) OKX (d) 国内取引所（bitFlyer 等）(e) 複数 | Proposed | |
-| D-02 | 初期銘柄ユニバース | BTC, ETH の 2 銘柄 → 第2段階で流動性上位 20〜30 | (a) BTC のみ (b) BTC+ETH (c) 上位 10 (d) 上位 30 | Proposed | |
+| D-01 | 取引所・アカウント種別 | 海外大手取引所の USDT 建て無期限先物（第2取引所として現物も） | (a) Binance (b) Bybit (c) OKX (d) 国内取引所（bitFlyer 等）(e) 複数 | Decided | **Hyperliquid（USDC 建て無期限）を第 1 系統、Bybit を第 2 系統**。ユーザーは委任。当初案は Bybit 先行だったが、開発環境から Bybit（本番・テストネットとも）が地域ブロックで検証不能なため入れ替え。研究データは Binance 公開履歴 |
+| D-02 | 初期銘柄ユニバース | BTC, ETH の 2 銘柄 → 第2段階で流動性上位 20〜30 | (a) BTC のみ (b) BTC+ETH (c) 上位 10 (d) 上位 30 | Decided | **BTC, ETH, SOL, HYPE**（Hyperliquid で 24h 出来高 3 億 USD 以上かつ 700 USD で 20 段階以上刻める銘柄）。Hyperliquid は最小注文 10 USD のため BTC も細かく刻める |
 | D-03 | 時間軸 | 中頻度: 1m〜1h バー、保有 数十分〜数日 | (a) 日次スイング (b) 中頻度 (c) 高頻度（非推奨） | Proposed | |
 | D-04 | 初期資金と目標規模 | （ユーザー入力） | 金額 | Decided | 初期 700 USD。目標規模は段階的に（設計書 12 章・`02_CONSTRAINTS.md` 参照） |
 | D-05 | 言語・スタック | Python 3.12 + Polars/Numba/DuckDB。必要箇所のみ後で Rust | (a) Python (b) Rust (c) Python+Rust 併用（最初から） | Proposed | |
@@ -27,3 +27,6 @@
 - 2026-09-02: 初版作成。全項目 Proposed。
 - 2026-09-02: ユーザー回答により D-04, D-07, D-09, D-14 を Decided。D-10 はおまかせのため提案値で Decided。
   D-01（取引所）は日本在住の制約を踏まえた候補比較を `02_CONSTRAINTS.md` に整理し、確認待ち。
+- 2026-09-02: D-01 をユーザー委任で Decided（Hyperliquid 第 1、Bybit 第 2）。D-02 を Decided（BTC, ETH, SOL, HYPE）。
+  根拠: 開発環境から Bybit API が地域ブロックされ検証不能。Hyperliquid は本番・テストネットとも疎通確認済み。
+  Hyperliquid の実測: BTC の数量刻み 0.00001（約 0.8 USD）、最小注文 10 USD → 700 USD で 70 段階。

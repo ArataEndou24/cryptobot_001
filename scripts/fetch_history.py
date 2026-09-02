@@ -34,7 +34,10 @@ def main() -> None:
     ap.add_argument(
         "--end", type=date.fromisoformat, required=True, help="排他的（この日は含まない）"
     )
-    ap.add_argument("--klines", action="store_true")
+    ap.add_argument("--klines", action="store_true", help="1 分足を日次ファイルで取得")
+    ap.add_argument(
+        "--klines-monthly", action="store_true", help="1 分足を月次ファイルで取得（一括向け）"
+    )
     ap.add_argument("--agg-trades", action="store_true")
     ap.add_argument("--funding", action="store_true")
     ap.add_argument("--metrics", action="store_true")
@@ -77,6 +80,16 @@ def main() -> None:
                     else:
                         store.write_raw(VENUE, sym, "metrics", part, df, overwrite=args.overwrite)
                         log.info("metrics %s %s rows=%d", sym, d, df.height)
+        if args.klines_monthly:
+            for y, m in month_iter(args.start, args.end - timedelta(days=1)):
+                part = store.month_partition(y, m)
+                if args.overwrite or not store.has_raw(VENUE, sym, "klines_1m", part):
+                    df = src.fetch_klines_monthly(sym, "1m", y, m)
+                    if df is None:
+                        log.warning("klines(monthly) なし %s %s", sym, part)
+                    else:
+                        store.write_raw(VENUE, sym, "klines_1m", part, df, overwrite=args.overwrite)
+                        log.info("klines(monthly) %s %s rows=%d", sym, part, df.height)
         if args.funding:
             for y, m in month_iter(args.start, args.end - timedelta(days=1)):
                 part = store.month_partition(y, m)
